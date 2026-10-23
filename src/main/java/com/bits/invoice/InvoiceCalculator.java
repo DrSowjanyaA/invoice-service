@@ -1,5 +1,6 @@
 package com.bits.invoice;
 
+// Invoice calculation service for Jenkins CI demonstration
 public class InvoiceCalculator {
 	public double netAmount(double gross, double discountPct) {
 		if (discountPct < 0 || discountPct > 100)
