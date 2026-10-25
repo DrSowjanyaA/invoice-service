@@ -1,5 +1,5 @@
 package com.bits.invoice;
-
+//changes made 1
 // Invoice calculation service for Jenkins CI demonstration
 public class InvoiceCalculator {
 	public double netAmount(double gross, double discountPct) {
