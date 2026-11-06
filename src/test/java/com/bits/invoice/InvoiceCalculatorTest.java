@@ -21,4 +21,8 @@ public class InvoiceCalculatorTest {
     public void invalidDiscount() {
         calc.netAmount(1000, 120);
     }
+    @Test(expected = IllegalArgumentException.class)
+    public void negativeDiscount() {
+        calc.netAmount(1000, -5);
+    }
 }
