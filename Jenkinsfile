@@ -30,6 +30,40 @@ pipeline {
                 }
             }
         }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t invoice-service:${BUILD_NUMBER} .'
+            }
+        }
+
+        stage('Deploy to Staging') {
+            steps {
+                sh '''
+                    docker rm -f invoice-staging || true
+                    docker run -d --name invoice-staging -e APP_ENV=staging -p 8085:8080 invoice-service:${BUILD_NUMBER}
+                    sleep 5
+                    curl -s http://localhost:8085
+                '''
+            }
+        }
+
+        stage('Approval') {
+            steps {
+                input message: 'Staging verified. Deploy to Production?', ok: 'Deploy'
+            }
+        }
+
+        stage('Deploy to Production') {
+            steps {
+                sh '''
+                    docker rm -f invoice-prod || true
+                    docker run -d --name invoice-prod -e APP_ENV=production -p 8086:8080 invoice-service:${BUILD_NUMBER}
+                    sleep 5
+                    curl -s http://localhost:8086
+                '''
+            }
+        }
     }
 
     post {
